@@ -46,5 +46,25 @@ export class FfmpegService {
     await this.ffmpeg.run(
       ...commands
     )
+
+    const screenshots: string[] = [];
+
+    seconds.forEach(second => {
+      const screenShotFile = this.ffmpeg.FS(
+        'readFile', `output_0${second}.png`
+      )
+
+      const screenshotBlob = new Blob(
+        [screenShotFile.buffer], {
+          type: 'image/png'
+        }
+      )
+
+      const screenshotURL = URL.createObjectURL(screenshotBlob);
+
+      screenshots.push(screenshotURL);
+    })
+
+    return screenshots;
   }
 }
