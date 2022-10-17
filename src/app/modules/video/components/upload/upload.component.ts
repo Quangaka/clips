@@ -56,6 +56,10 @@ export class UploadComponent implements OnInit, OnDestroy {
   }
 
   async storeFile($event: Event) {
+    if(this.ffmpegService.isRunning) {
+      return;
+    }
+
     this.isDragOver = false;
 
     this.file = ($event as DragEvent).dataTransfer ?
@@ -66,7 +70,7 @@ export class UploadComponent implements OnInit, OnDestroy {
       return
     }
 
-    await this.ffmpegService.getScreenShots(this.file);
+    this.screenshots = await this.ffmpegService.getScreenShots(this.file);
 
     this.title.setValue(
       this.file.name.replace(/\.[^/.]+$/, '')
