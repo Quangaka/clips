@@ -27,8 +27,9 @@ export class UploadComponent implements OnInit, OnDestroy {
   public showPercentage = false;
   public user: firebase.User | null = null;
   public uploadTask?: AngularFireUploadTask;
-  screenshots: string[] = [];
-  selectedScreenshot = '';
+  public screenshots: string[] = [];
+  public selectedScreenshot = '';
+  public screenshotUploadTask?: AngularFireUploadTask;
 
   title = new FormControl('',[
     Validators.required,
@@ -81,7 +82,7 @@ export class UploadComponent implements OnInit, OnDestroy {
     this.nextStep = true;
   }
 
-  upLoadFile() {
+  async upLoadFile() {
     this.upLoadForm.disable();
     this.showAlert = true;
     this.alertColor = 'blue';
@@ -90,9 +91,19 @@ export class UploadComponent implements OnInit, OnDestroy {
 
     const clipFileName = uuidv4()
     const clipPath = `clips/${clipFileName}.mp4`;
+
+    const screenshotBlob = await this.ffmpegService.blobFromURL(
+      this.selectedScreenshot
+    );
+
+    const screenshotPath = `screenshots/${clipFileName}.png`;
     
     this.uploadTask = this.storage.upload(clipPath, this.file);
     const clipRef = this.storage.ref(clipPath);
+
+    this.screenshotUploadTask = this.storage.upload(
+      screenshotPath, screenshotBlob
+    );
 
     this.uploadTask.percentageChanges().subscribe(progress => {
       this.percentage = progress as number / 100;
