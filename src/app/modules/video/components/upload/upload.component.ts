@@ -4,7 +4,7 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/compat/
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
 import { v4 as uuidv4 } from 'uuid';
-import { last, switchMap } from 'rxjs';
+import { combineLatest, last, switchMap } from 'rxjs';
 import { ClipService } from 'src/app/services/clip.service';
 import { Router } from '@angular/router';
 import { FfmpegService } from 'src/app/services/ffmpeg.service';
@@ -105,8 +105,18 @@ export class UploadComponent implements OnInit, OnDestroy {
       screenshotPath, screenshotBlob
     );
 
-    this.uploadTask.percentageChanges().subscribe(progress => {
-      this.percentage = progress as number / 100;
+    combineLatest([
+      this.uploadTask.percentageChanges(),
+      this.screenshotUploadTask.percentageChanges()
+    ]).subscribe((progress) => {
+      const [clipProgress, screenshotProgress] = progress;
+
+      if(!clipProgress || !screenshotProgress) {
+        return;
+      }
+
+      const total = clipProgress + screenshotProgress;
+      this.percentage = total as number / 100;
     })
 
     this.uploadTask.snapshotChanges().pipe(
