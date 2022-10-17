@@ -27,6 +27,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   public showPercentage = false;
   public user: firebase.User | null = null;
   public uploadTask?: AngularFireUploadTask;
+  screenshots: string[] = [];
 
   title = new FormControl('',[
     Validators.required,
