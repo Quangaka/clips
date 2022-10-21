@@ -21,6 +21,7 @@
     "@angular/router": "^14.1.0",
     "@ffmpeg/core": "^0.11.0",
     "@ffmpeg/ffmpeg": "^0.11.5",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
     "@types/node": "^18.11.0",
     "@types/uuid": "^8.3.4",
     "@types/video.js": "^7.3.49",

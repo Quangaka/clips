@@ -12,5 +12,7 @@ module.exports = {
       backgroundColor: ['disable'],
     },
   },
-  plugins: [],
+  plugins: [
+    require("@tailwindcss/aspect-ratio")
+  ],
 }
