@@ -13,6 +13,9 @@ export class FbTimestampPipe implements PipeTransform {
   }
 
   transform(value: unknown, ...args: unknown[]): unknown {
+    if(!value) {
+      return ''
+    }
     const date = (value as firebase.firestore.Timestamp).toDate();
     return this.datePipe.transform(date, 'mediumDate');
   }
